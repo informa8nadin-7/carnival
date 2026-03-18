@@ -40,3 +40,24 @@ def build_echo_text(user_text: str) -> str:
         return "Ты ничего не написал, поэтому мне нечего повторять 🙂"
     return cleaned
 
+
+def build_plain_text_reply(user_text: str) -> str:
+    """Формирует ответ на обычное текстовое сообщение.
+
+    Если пользователь прислал целое число, бот отвечает числом + 1.
+    Во всех остальных случаях — обычное эхо через `build_echo_text`.
+    """
+    cleaned = user_text.strip()
+    if not cleaned:
+        # Пустой ввод обрабатываем так же, как и раньше в эхо.
+        return build_echo_text(cleaned)
+
+    try:
+        value = int(cleaned)
+    except ValueError:
+        # Не число — обычное эхо.
+        return build_echo_text(cleaned)
+
+    # Если это целое число — возвращаем число + 1.
+    return str(value + 1)
+

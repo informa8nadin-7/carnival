@@ -2,7 +2,12 @@
 
 import pytest
 
-from src.bot.services.text import build_welcome_text, build_help_text, build_echo_text
+from src.bot.services.text import (
+    build_welcome_text,
+    build_help_text,
+    build_echo_text,
+    build_plain_text_reply,
+)
 
 
 def test_build_welcome_text_uses_name() -> None:
@@ -40,4 +45,36 @@ def test_build_echo_text_handles_empty() -> None:
     """Если текст пустой, возвращается понятное сообщение."""
     text = build_echo_text("   ")
     assert "ничего не написал" in text
+
+
+@pytest.mark.parametrize(
+    "user_text, expected",
+    [
+        ("10", "11"),
+        ("  0  ", "1"),
+        ("-1", "0"),
+        ("0007", "8"),
+    ],
+)
+def test_build_plain_text_reply_increments_integers(
+    user_text: str, expected: str
+) -> None:
+    """Если пользователь прислал целое число, бот отвечает числом + 1."""
+    assert build_plain_text_reply(user_text) == expected
+
+
+@pytest.mark.parametrize(
+    "user_text, expected",
+    [
+        ("привет", "привет"),
+        ("  текст  ", "текст"),
+        ("", "Ты ничего не написал, поэтому мне нечего повторять 🙂"),
+        ("   ", "Ты ничего не написал, поэтому мне нечего повторять 🙂"),
+    ],
+)
+def test_build_plain_text_reply_falls_back_to_echo(
+    user_text: str, expected: str
+) -> None:
+    """Если это не число, используется обычное эхо-поведение."""
+    assert build_plain_text_reply(user_text) == expected
 

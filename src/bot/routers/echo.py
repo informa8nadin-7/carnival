@@ -7,7 +7,7 @@ from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
 from aiogram import F
 
-from ..services.text import build_echo_text
+from ..services.text import build_echo_text, build_plain_text_reply
 
 
 echo_router = Router()
@@ -54,16 +54,16 @@ async def handle_echo_on(message: Message, state: FSMContext) -> None:
 
 @echo_router.message(F.text & ~F.text.startswith("/"))
 async def handle_plain_text(message: Message, state: FSMContext) -> None:
-    """Повторяет любое текстовое сообщение пользователя.
+    """Обрабатывает обычные текстовые сообщения.
 
-    Это классический "эхо"-бот.
+    Если пользователь прислал целое число — бот отвечает числом + 1.
+    В остальных случаях — повторяет текст (эхо).
     """
     data = await state.get_data()
     echo_enabled = data.get(ECHO_ENABLED_KEY, True)
     if not echo_enabled:
         await message.answer("Эхо сейчас выключено. Включить: /echo_on")
         return
-
-    reply_text = build_echo_text(message.text or "")
+    reply_text = build_plain_text_reply(message.text or "")
     await message.answer(reply_text)
 
