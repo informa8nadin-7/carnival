@@ -2,11 +2,6 @@
 
 import asyncio
 
-from aiogram import Bot, Dispatcher
-from aiogram.client.default import DefaultBotProperties
-from aiogram.enums import ParseMode
-from aiogram.fsm.storage.memory import MemoryStorage
-
 from .config import load_config
 from .routers import get_root_router
 from .utils.logging import setup_logging
@@ -23,6 +18,13 @@ def run_bot() -> None:
 
 async def _run_polling() -> None:
     """Асинхронная функция, которая настраивает и запускает бота."""
+    # Импорты aiogram держим внутри функции.
+    # Так юнит-тесты могут импортировать модуль `main` без установки/импорта aiogram.
+    from aiogram import Bot, Dispatcher
+    from aiogram.client.default import DefaultBotProperties
+    from aiogram.enums import ParseMode
+    from aiogram.fsm.storage.memory import MemoryStorage
+
     logger = setup_logging()
     config = load_config()
 
