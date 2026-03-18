@@ -1,0 +1,45 @@
+# Секреты и локальные переменные окружения
+.env
+.env.*
+!.env.example
+
+# Виртуальные окружения
+.venv/
+venv/
+env/
+
+# Кеши и мусор Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Тесты/покрытие
+.pytest_cache/
+.coverage
+coverage.xml
+htmlcov/
+.hypothesis/
+
+# Линтеры/тайпчекеры/инструменты
+.mypy_cache/
+.ruff_cache/
+.cache/
+
+# Сборка/пакеты
+build/
+dist/
+*.egg-info/
+pip-wheel-metadata/
+
+# Логи и временные файлы
+*.log
+logs/
+
+# IDE/редакторы
+.idea/
+.vscode/
+*.iml
+
+# ОС (Windows)
+Thumbs.db
+Desktop.ini
