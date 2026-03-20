@@ -15,7 +15,7 @@ def get_main_menu_keyboard() -> ReplyKeyboardMarkup:
             [KeyboardButton(text="/plus3 10")],
             [KeyboardButton(text="/plus3_input"), KeyboardButton(text="/cancel")],
             [KeyboardButton(text="/echo_off"), KeyboardButton(text="/echo_on")],
+            [KeyboardButton(text="/chatgpt"), KeyboardButton(text="/chatgpt_off")],
         ],
         resize_keyboard=True,
     )
-

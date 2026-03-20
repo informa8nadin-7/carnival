@@ -8,6 +8,7 @@ from aiogram.fsm.state import State, StatesGroup
 from aiogram import F
 
 from ..services.text import build_echo_text, build_plain_text_reply
+from .chatgpt import ChatGPTStates
 
 
 echo_router = Router()
@@ -59,6 +60,16 @@ async def handle_plain_text(message: Message, state: FSMContext) -> None:
     Если пользователь прислал целое число — бот отвечает числом + 1.
     В остальных случаях — повторяет текст (эхо).
     """
+    import logging
+    logger = logging.getLogger(__name__)
+    # Если активен режим ChatGPT, не отвечаем эхом
+    current_state = await state.get_state()
+    logger.info("echo_router: текущее состояние = %s, ожидаемое = %s",
+                current_state, ChatGPTStates.active.state)
+    if current_state == ChatGPTStates.active.state:
+        logger.info("Состояние активного ChatGPT, пропускаем эхо.")
+        return
+
     data = await state.get_data()
     echo_enabled = data.get(ECHO_ENABLED_KEY, True)
     if not echo_enabled:
@@ -66,4 +77,3 @@ async def handle_plain_text(message: Message, state: FSMContext) -> None:
         return
     reply_text = build_plain_text_reply(message.text or "")
     await message.answer(reply_text)
-
