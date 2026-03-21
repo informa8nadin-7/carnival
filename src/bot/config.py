@@ -31,11 +31,17 @@ def load_config() -> BotConfig:
     if ENV_PATH.is_file():
         load_dotenv(dotenv_path=ENV_PATH)
 
-    bot_token = os.getenv("BOT_TOKEN")
-    polza_api_key = os.getenv("POLZA_API_KEY", "")
-    polza_model = os.getenv("POLZA_MODEL", "gpt-3.5-turbo")
-    polza_base_url = os.getenv("POLZA_BASE_URL", "https://api.polza.ai/v1")
+    bot_token_raw = os.getenv("BOT_TOKEN")
+    polza_api_key_raw = os.getenv("POLZA_API_KEY", "")
+    polza_model_raw = os.getenv("POLZA_MODEL", "gpt-3.5-turbo")
+    polza_base_url_raw = os.getenv("POLZA_BASE_URL", "https://api.polza.ai/v1")
     polza_history_messages_limit = int(os.getenv("POLZA_HISTORY_MESSAGES_LIMIT", "5"))
+
+    # Убираем возможные пробелы в начале и конце
+    bot_token = bot_token_raw.strip() if bot_token_raw else None
+    polza_api_key = polza_api_key_raw.strip() if polza_api_key_raw else ""
+    polza_model = polza_model_raw.strip()
+    polza_base_url = polza_base_url_raw.strip()
 
     if not bot_token:
         # Явная ошибка, чтобы быстро понять проблему с конфигурацией

@@ -7,6 +7,7 @@ from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
 from collections import deque
 import logging
+import asyncio
 
 from ..config import load_config
 from ..services.polza_chat import ask_polza
@@ -100,9 +101,13 @@ async def handle_dialog_message(message: Message, state: FSMContext) -> None:
     # Добавляем сообщение пользователя в контекст
     context.append({"role": "user", "content": user_text})
 
-    # Индикатор "печатает..."
-    await message.bot.send_chat_action(chat_id=message.chat.id, action="typing")
+    # Индикатор "печатает..." с периодическим обновлением
+    async def typing_indicator():
+        while True:
+            await message.bot.send_chat_action(chat_id=message.chat.id, action="typing")
+            await asyncio.sleep(5)  # Telegram обновляет индикатор каждые 5 секунд
 
+    typing_task = asyncio.create_task(typing_indicator())
     try:
         # Запрашиваем ответ у Polza.ai
         reply = await ask_polza(list(context))
@@ -111,6 +116,12 @@ async def handle_dialog_message(message: Message, state: FSMContext) -> None:
         logger.error("Ошибка при запросе к Polza.ai: %s", e)
         await message.answer("Произошла ошибка при обращении к ИИ. Попробуйте позже.")
         return
+    finally:
+        typing_task.cancel()
+        try:
+            await typing_task
+        except asyncio.CancelledError:
+            pass
 
     # Добавляем ответ ассистента в контекст
     context.append({"role": "assistant", "content": reply})
