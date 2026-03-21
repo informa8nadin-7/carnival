@@ -101,6 +101,9 @@ async def handle_dialog_message(message: Message, state: FSMContext) -> None:
     # Добавляем сообщение пользователя в контекст
     context.append({"role": "user", "content": user_text})
 
+    # Немедленно показываем индикатор "печатает"
+    await message.bot.send_chat_action(chat_id=message.chat.id, action="typing")
+    
     # Индикатор "печатает..." с периодическим обновлением
     async def typing_indicator():
         while True:
