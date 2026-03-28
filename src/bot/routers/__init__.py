@@ -9,6 +9,7 @@ from .plus3 import plus3_router
 from .plus3_input import plus3_input_router
 from .chatgpt import chatgpt_router
 from .image import image_router
+from .translate import translate_router
 
 
 def get_root_router() -> Router:
@@ -23,5 +24,6 @@ def get_root_router() -> Router:
     root_router.include_router(plus3_input_router)
     root_router.include_router(chatgpt_router)  # Подключаем раньше echo_router
     root_router.include_router(image_router)    # Подключаем перед echo_router
+    root_router.include_router(translate_router)  # Роутер для перевода
     root_router.include_router(echo_router)
     return root_router
