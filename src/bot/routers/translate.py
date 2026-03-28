@@ -28,11 +28,13 @@ async def handle_translate_command(message: Message, state: FSMContext) -> None:
     parts = command_text.split(maxsplit=1)
     if len(parts) > 1:
         # Пользователь сразу написал текст для перевода
-        text_to_translate = parts[1]
-        await process_translation(message, text_to_translate)
-        return
+        text_to_translate = parts[1].strip()
+        if text_to_translate:
+            await process_translation(message, text_to_translate)
+            return
+        # Если текст состоит только из пробелов, переходим в состояние ожидания
 
-    # Если текст не указан, переводим в состояние ожидания
+    # Если текст не указан или пустой, переводим в состояние ожидания
     await state.set_state(TranslateStates.waiting_for_text)
     await message.answer(
         "Отправьте текст, который нужно перевести на английский язык.\n"
@@ -51,6 +53,13 @@ async def handle_text_for_translation(message: Message, state: FSMContext) -> No
     await process_translation(message, text)
     # Очищаем состояние после перевода
     await state.clear()
+
+
+@translate_router.message(Command("cancel"), StateFilter(TranslateStates.waiting_for_text))
+async def handle_cancel_in_translate(message: Message, state: FSMContext) -> None:
+    """Обрабатывает команду /cancel в режиме перевода."""
+    await state.clear()
+    await message.answer("Режим перевода отменён. Вы можете снова использовать /translate когда захотите.")
 
 
 @translate_router.message(StateFilter(TranslateStates.waiting_for_text))

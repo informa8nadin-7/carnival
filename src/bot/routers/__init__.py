@@ -5,7 +5,7 @@ from aiogram import Router
 from .start import start_router
 from .help import help_router
 from .echo import echo_router
-from .plus3 import plus3_router
+from .plus3 import plus1_router
 from .plus3_input import plus3_input_router
 from .chatgpt import chatgpt_router
 from .image import image_router
@@ -21,7 +21,7 @@ def get_root_router() -> Router:
     root_router = Router()
     root_router.include_router(start_router)
     root_router.include_router(help_router)
-    root_router.include_router(plus3_router)
+    root_router.include_router(plus1_router)
     root_router.include_router(plus3_input_router)
     root_router.include_router(chatgpt_router)  # Подключаем раньше echo_router
     root_router.include_router(image_router)    # Подключаем перед echo_router

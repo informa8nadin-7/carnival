@@ -16,3 +16,16 @@ def add_three(value: int) -> int:
 
     return value + 3
 
+
+def add_one(value: int) -> int:
+    """Увеличивает число на 1.
+
+    Args:
+        value: Целое число, которое нужно увеличить.
+
+    Returns:
+        Число `value + 1`.
+    """
+
+    return value + 1
+
